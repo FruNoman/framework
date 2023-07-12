@@ -17,7 +17,9 @@ def firefox_driver(config: ConfigParser):
 def chrome_driver(config: ConfigParser):
     service = ChromeService(executable_path=config['drivers']['chrome_path'])
     options = webdriver.ChromeOptions()
-    options.add_argument("--no-sandbox")
+    # options.add_argument("--no-sandbox")
+    # options.add_argument("--disable-dev-shm-usage")
+
     options.add_argument('--remote-debugging-port=9399')
     driver = webdriver.Chrome(options=options, service=service)
     driver.maximize_window()

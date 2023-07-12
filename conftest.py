@@ -35,3 +35,7 @@ def driver(config, browser):
             driver = driver_manager.firefox_driver(config)
     yield driver
     driver.quit()
+
+# @pytest.fixture(autouse=True, scope='function')
+# def before_test(driver):
+#     driver.get()
