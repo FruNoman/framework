@@ -1,7 +1,12 @@
 import os
 import pytest
-from utils import driver_manager
 from configparser import ConfigParser
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.firefox.service import Service as FirefoxService
+
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
 
 resources = os.path.dirname(os.path.abspath(__file__))
 
@@ -15,7 +20,7 @@ def config():
 
 def pytest_addoption(parser):
     parser.addoption(
-        "--browser", action="store", default="firefox", help="set browser name: firefox, chrome"
+        "--browser", action="store", default="chrome", help="set browser name: firefox, chrome"
     )
 
 
@@ -28,14 +33,14 @@ def browser(request):
 def driver(config, browser):
     match browser:
         case 'chrome':
-            driver = driver_manager.chrome_driver(config)
+            service = ChromeService(executable_path=ChromeDriverManager().install())
+            driver = webdriver.Chrome(service=service)
         case 'firefox':
-            driver = driver_manager.firefox_driver(config)
+             service = FirefoxService(executable_path=GeckoDriverManager().install())
+             driver = webdriver.Firefox(service=service)
         case _:
-            driver = driver_manager.firefox_driver(config)
+            service = FirefoxService(executable_path=GeckoDriverManager().install())
+            driver = webdriver.Firefox(service=service)
     yield driver
     driver.quit()
 
-# @pytest.fixture(autouse=True, scope='function')
-# def before_test(driver):
-#     driver.get()
